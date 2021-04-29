@@ -12,32 +12,46 @@ GROUP BY
 
 
 4) Fai una analisi per vedere se ci sono ore in cui le prenotazioni sono più frequenti
-	SELECT HOUR(created_at) AS "Ora prenotazione", COUNT(HOUR(created_at)) as numero_prenotazioni FROM `prenotazioni` GROUP BY HOUR(created_at) ORDER BY numero_prenotazioni DESC LIMIT 1
+	SELECT HOUR(created_at) AS "Ora prenotazione", COUNT(HOUR(created_at)) as numero_prenotazioni FROM `prenotazioni` 
+	GROUP BY HOUR(created_at) ORDER BY numero_prenotazioni DESC LIMIT 1
 
 
 5) Quante prenotazioni ha fatto l’ospite che ha fatto più prenotazioni?
-	SELECT ospite_id AS "Id ospite", COUNT(ospite_id) AS numero_prenotazioni FROM `prenotazioni_has_ospiti` GROUP BY ospite_id ORDER BY numero_prenotazioni DESC LIMIT 1
+	SELECT ospite_id AS "Id ospite", COUNT(ospite_id) AS numero_prenotazioni FROM `prenotazioni_has_ospiti` 
+	GROUP BY ospite_id ORDER BY numero_prenotazioni DESC LIMIT 1
 
 
 
 
 JOIN
 1) Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
-	SELECT name, lastname, COUNT(*) AS numero_prenotazioni FROM `ospiti` INNER JOIN prenotazioni_has_ospiti ON ospiti.id = prenotazioni_has_ospiti.ospite_id GROUP BY ospiti.id ORDER BY numero_prenotazioni DESC LIMIT 1
+	SELECT name, lastname, COUNT(*) AS numero_prenotazioni FROM `ospiti` 
+	INNER JOIN prenotazioni_has_ospiti ON ospiti.id = prenotazioni_has_ospiti.ospite_id 
+	GROUP BY ospiti.id 
+	ORDER BY numero_prenotazioni DESC LIMIT 1
 
 
 
 2) Stampare tutti gli ospiti per ogni prenotazione
-    SELECT prenotazioni.id AS "Id prenotazione", name AS "Nome" ,lastname AS "Cognome" FROM `ospiti` INNER JOIN prenotazioni_has_ospiti ON prenotazioni_has_ospiti.ospite_id = ospiti.id INNER JOIN prenotazioni ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id GROUP BY prenotazioni.id
+    SELECT prenotazioni.id AS "Id prenotazione", name AS "Nome" ,lastname AS "Cognome" FROM `ospiti` 
+	INNER JOIN prenotazioni_has_ospiti ON prenotazioni_has_ospiti.ospite_id = ospiti.id 
+	INNER JOIN prenotazioni ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id 
+	GROUP BY prenotazioni.id
 
 
 3) Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
-	SELECT DATE_FORMAT(pagamenti.created_at , "%m-%Y") AS "Data", ospiti.name AS "Nome ospite",ospiti.lastname AS "Cognome ospite", paganti.name AS "Nome pagante",paganti.lastname AS "Cognome pagante", pagamenti.price AS "Prezzo" FROM `prenotazioni` INNER JOIN pagamenti ON pagamenti.prenotazione_id = prenotazioni.id INNER JOIN paganti ON paganti.id = pagamenti.pagante_id INNER JOIN ospiti ON ospiti.id = paganti.ospite_id WHERE DATE_FORMAT(pagamenti.created_at , "%m-%Y") = "05-2018"
+	SELECT DATE_FORMAT(pagamenti.created_at , "%m-%Y") AS "Data", ospiti.name AS "Nome ospite",ospiti.lastname AS "Cognome ospite", paganti.name AS "Nome pagante",paganti.lastname AS "Cognome pagante", pagamenti.price AS "Prezzo" FROM `prenotazioni` 
+	INNER JOIN pagamenti ON pagamenti.prenotazione_id = prenotazioni.id 
+	INNER JOIN paganti ON paganti.id = pagamenti.pagante_id 
+	INNER JOIN ospiti ON ospiti.id = paganti.ospite_id 
+	WHERE DATE_FORMAT(pagamenti.created_at , "%m-%Y") = "05-2018"
 
 
 4) Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
-	SELECT SUM(price) AS "Somma prenotazioni stanze primo piano" FROM `pagamenti` INNER JOIN prenotazioni ON prenotazioni.id = pagamenti.prenotazione_id INNER JOIN stanze ON stanza_id = prenotazioni.stanza_id WHERE stanze.floor = 1
-
+	SELECT SUM(pagamenti.price) AS "Somma prenotazioni stanze primo piano" FROM `prenotazioni` 
+	INNER JOIN pagamenti ON pagamenti.prenotazione_id = prenotazioni.id 
+	INNER JOIN stanze ON stanze.id = prenotazioni.stanza_id
+	WHERE stanze.floor = 1
 
 
 5) Prendi i dati di fatturazione per la prenotazione con id=7
