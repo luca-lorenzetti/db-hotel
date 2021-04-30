@@ -43,7 +43,7 @@ JOIN
 	SELECT DATE_FORMAT(pagamenti.created_at , "%m-%Y") AS "Data", ospiti.name AS "Nome ospite",ospiti.lastname AS "Cognome ospite", paganti.name AS "Nome pagante",paganti.lastname AS "Cognome pagante", pagamenti.price AS "Prezzo" FROM `prenotazioni` 
 	INNER JOIN pagamenti ON pagamenti.prenotazione_id = prenotazioni.id 
 	INNER JOIN paganti ON paganti.id = pagamenti.pagante_id 
-	INNER JOIN ospiti ON ospiti.id = paganti.ospite_id 
+	LEFT JOIN ospiti ON ospiti.id = paganti.ospite_id 
 	WHERE DATE_FORMAT(pagamenti.created_at , "%m-%Y") = "05-2018"
 
 
